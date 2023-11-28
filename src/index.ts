@@ -1,8 +1,8 @@
 import Geometry from "./classes/Geometry";
-import Point from "./classes/Point";
 import dotenv from "dotenv";
 import cors from "cors";
 import express, {Request, Response} from "express"
+import Point from "./classes/Point";
 
 dotenv.config()
 
@@ -11,11 +11,17 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-app.get("/dois", (req:Request, res:Response) => {
-    const geometry = new Geometry(toString);
+app.get("/dois/:x/:y", (req:Request, res:Response) => {
+    const {x,y} = req.params;
+    const ponto = new Point(parseInt(x), parseInt(y));
+
+    const geometry = new Geometry(ponto)
     const points = geometry.getPoints();
     const perimetro = geometry.perimeter();
+    res.send(`points: (${points},perimeter: ${perimetro})`);
 
-    res.send(geometry.toString());
 })
 
+app.listen(PORT, () => {
+    console.log(`Rodando na porta ${PORT}`)
+});
